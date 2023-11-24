@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  postgresql:
+    image: postgres:14.3
+    container_name: postgresql
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: mysn
+    ports:
+      - 5432:5432
+    volumes:
+      - data:/var/lib/postgresql/data
+
+  fastapi:
+    build: .
+    container_name: fastapi
+    volumes:
+      - .:/app
+      - ./data:/var/lib/postgresql/data
+    environment:
+      PGSQL_HOST: "postgresql"
+    ports:
+      - 8000:8000
+    depends_on:
+      - postgresql
+
+volumes:
+  data:
+
